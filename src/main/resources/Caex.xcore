@@ -1,0 +1,441 @@
+@ExtendedMetaData(qualified="false")
+@Ecore(nsPrefix="caex", nsURI="http://www.dke.de/CAEX/300")
+@GenModel(bundleManifest="false", forceOverwrite="true", modelDirectory="caex-xcore-model/build/xcore/main",
+	updateClasspath="false", complianceLevel="8.0", prefix="Caex", modelName="Caex")
+package org.caex
+
+import anytype.GenericElement
+import org.eclipse.emf.ecore.EFeatureMapEntry
+import org.eclipse.emf.ecore.EStringToStringMapEntry
+import org.eclipse.emf.ecore.xml.^type.DateTime
+import org.eclipse.emf.ecore.xml.^type.String
+
+@ExtendedMetaData(name="AttributeDataType_._type", baseType="http://www.eclipse.org/emf/2003/XMLType#string")
+type AttributeDataType wraps String
+
+@GenModel(documentation="Defines base structures for attribute type definitions.")
+@ExtendedMetaData(name="AttributeFamilyType", kind="elementOnly")
+class AttributeFamily extends Attribute {
+}
+
+@ExtendedMetaData(name="AttributeNameMapping_._type", kind="elementOnly")
+class AttributeNameMapping extends CAEXBasicObject {
+	@ExtendedMetaData(kind="attribute", name="RoleAttributeName")
+	org.eclipse.emf.ecore.xml.^type.String[1] roleAttributeName
+	@ExtendedMetaData(kind="attribute", name="SystemUnitAttributeName")
+	org.eclipse.emf.ecore.xml.^type.String[1] systemUnitAttributeName
+	refers Attribute[1] roleAttribute
+	refers Attribute[1] systemUnitAttribute
+}
+
+@GenModel(documentation="Defines base structures for attribute definitions.")
+@ExtendedMetaData(name="AttributeType", kind="elementOnly")
+class Attribute extends CAEXObject {
+	@GenModel(documentation="A predefined default value for an attribute.")
+	@ExtendedMetaData(kind="element", name="DefaultValue", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String defaultValue
+	@GenModel(documentation="Element describing the value of an attribute.")
+	@ExtendedMetaData(kind="element", name="Value", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String value
+	@GenModel(documentation="A reference to a definition of a defined attribute, e. g. to an attribute in a standardized library, this allows the semantic definition of the attribute.")
+	@ExtendedMetaData(kind="element", name="RefSemantic", namespace="##targetNamespace")
+	contains RefSemantic[] refSemantic
+	@GenModel(documentation="Element to restrict the range of validity of a defined attribute.")
+	@ExtendedMetaData(kind="element", name="Constraint", namespace="##targetNamespace")
+	contains AttributeValueRequirement[] constraint
+	@GenModel(documentation="Element that allows the description of nested attributes.")
+	@ExtendedMetaData(kind="element", name="Attribute", namespace="##targetNamespace")
+	contains Attribute[] attribute
+	@GenModel(documentation="Describes the data type of the attribute using XML notation.")
+	@ExtendedMetaData(kind="attribute", name="AttributeDataType")
+	AttributeDataType attributeDataType
+	@GenModel(documentation="Refences an attribute type in the attribute library.")
+	@ExtendedMetaData(kind="attribute", name="RefAttributeType")
+	org.eclipse.emf.ecore.xml.^type.String refAttributeType
+	@GenModel(documentation="Describes the unit of the attribute.")
+	@ExtendedMetaData(kind="attribute", name="Unit")
+	org.eclipse.emf.ecore.xml.^type.String unit
+	refers Attribute referenceAttribute
+}
+
+class AttributeLib extends CAEXObject {
+	contains Attribute[] attributeType
+}
+
+@GenModel(documentation="Defines base structures for definition of value requirements of an attribute.")
+@ExtendedMetaData(name="AttributeValueRequirementType", kind="elementOnly")
+class AttributeValueRequirement extends CAEXBasicObject {
+	@GenModel(documentation="Element of to define constraints of ordinal scaled attribute values.")
+	@ExtendedMetaData(kind="element", name="OrdinalScaledType", namespace="##targetNamespace")
+	contains OrdinalScaled ordinalScaledType
+	@GenModel(documentation="Element of to define constraints of nominal scaled attribute values.")
+	@ExtendedMetaData(kind="element", name="NominalScaledType", namespace="##targetNamespace")
+	contains NominalScaled nominalScaledType
+	@GenModel(documentation="Element to define constraints for attribute values of an unknown scale type.")
+	@ExtendedMetaData(kind="element", name="UnknownType", namespace="##targetNamespace")
+	contains UnknownType unknownType
+	@GenModel(documentation="Describes the name of the contraint.")
+	@ExtendedMetaData(kind="attribute", name="Name")
+	org.eclipse.emf.ecore.xml.^type.String[1] name
+}
+
+@GenModel(documentation="CAEX basis object that comprises a basic set of attributes and header information which exist for all CAEX elements.")
+@ExtendedMetaData(name="CAEXBasicObject", kind="elementOnly")
+class CAEXBasicObject {
+	@GenModel(documentation="Optionally describes the change state of a CAEX object. If used, the ChangeMode shall have the following value range: state, create, delete and change. This information should be used for further change management applications.")
+	@ExtendedMetaData(kind="attribute", name="ChangeMode")
+	unsettable ChangeMode changeMode = "state"
+	@GenModel(documentation="Textual description for CAEX objects.")
+	@ExtendedMetaData(kind="element", name="Description", namespace="##targetNamespace")
+	contains Description description
+	@GenModel(documentation="Organizational information about the state of the version.")
+	@ExtendedMetaData(kind="element", name="Version", namespace="##targetNamespace")
+	contains Version version
+	@GenModel(documentation="Organizational information about the state of the revision.")
+	@ExtendedMetaData(kind="element", name="Revision", namespace="##targetNamespace")
+	contains Revision[] revision
+	@GenModel(documentation="Organizational information about copyright.")
+	@ExtendedMetaData(kind="element", name="Copyright", namespace="##targetNamespace")
+	contains Copyright copyright
+	contains AdditionalInformation[] additionalInformation
+}
+
+@ExtendedMetaData(name="CAEXFile_._type", kind="elementOnly")
+class CAEXFile extends CAEXBasicObject {
+	@GenModel(documentation="Describes the version of a superior standard, e.g. AutomationML x.y. The version string is defined in the superior standard.")
+	@ExtendedMetaData(kind="element", name="SuperiorStandardVersion", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String[] superiorStandardVersion
+	@GenModel(documentation="Provides information about the source(s) of the CAEX document.")
+	@ExtendedMetaData(kind="element", name="SourceDocumentInformation", namespace="##targetNamespace")
+	contains SourceDocumentInformation[+] sourceDocumentInformation
+	@GenModel(documentation="Container element for the alias definition of external CAEX files.")
+	@ExtendedMetaData(kind="element", name="ExternalReference", namespace="##targetNamespace")
+	contains ExternalReference[] externalReference
+	@GenModel(documentation="Root element for a system hierarchy of object instances.")
+	@ExtendedMetaData(kind="element", name="InstanceHierarchy", namespace="##targetNamespace")
+	contains InstanceHierarchy[] instanceHierarchy
+	@GenModel(documentation="Container element for a hierarchy of InterfaceClass definitions. It shall contain any interface class definitions. CAEX supports multiple interface libraries.")
+	@ExtendedMetaData(kind="element", name="InterfaceClassLib", namespace="##targetNamespace")
+	contains InterfaceClassLib[] interfaceClassLib
+	@GenModel(documentation="Container element for a hierarchy of RoleClass definitions. It shall contain any RoleClass definitions. CAEX supports multiple role libraries.")
+	@ExtendedMetaData(kind="element", name="RoleClassLib", namespace="##targetNamespace")
+	contains RoleClassLib[] roleClassLib
+	@GenModel(documentation="Container element for a hierarchy of SystemUnitClass definitions. It shall contain any SystemunitClass definitions. CAEX supports multiple SystemUnitClass libraries.")
+	@ExtendedMetaData(kind="element", name="SystemUnitClassLib", namespace="##targetNamespace")
+	contains SystemUnitClassLib[] systemUnitClassLib
+	@GenModel(documentation="Container element for a hierarchy of Attribute type definitions. CAEX supports multiple attribute type libraries.")
+	@ExtendedMetaData(kind="element", name="AttributeTypeLib", namespace="##targetNamespace")
+	contains AttributeLib[] attributeTypeLib
+	@GenModel(documentation="Describes the name of the CAEX file.")
+	@ExtendedMetaData(kind="attribute", name="FileName")
+	org.eclipse.emf.ecore.xml.^type.String[1] fileName
+	@GenModel(documentation="Describes the version of the schema. Each CAEX document must specify which CAEX version it requires. The version number of a CAEX document must fit to the version number specified in the CAEX schema file. ")
+	@ExtendedMetaData(kind="attribute", name="SchemaVersion")
+	unsettable org.eclipse.emf.ecore.xml.^type.String[1] schemaVersion = "3.00"
+}
+
+@GenModel(documentation="CAEX basis object derived from CAEXBasicObject, augmented by \nName (required) and ID (optional).")
+@ExtendedMetaData(name="CAEXObject", kind="elementOnly")
+class CAEXObject extends CAEXBasicObject {
+	@GenModel(documentation="Optional attribute that describes a unique identifier of the CAEX object.")
+	@ExtendedMetaData(kind="attribute", name="ID")
+	org.eclipse.emf.ecore.xml.^type.String iD
+	@GenModel(documentation="Describes the name of the CAEX object.")
+	@ExtendedMetaData(kind="attribute", name="Name")
+	org.eclipse.emf.ecore.xml.^type.String[1] name
+}
+
+@ExtendedMetaData(name="ChangeMode")
+enum ChangeMode {
+	state
+	^create = 1
+	delete = 2
+	change = 3
+}
+
+@ExtendedMetaData(name="", kind="mixed")
+class DocumentRoot {
+	@ExtendedMetaData(kind="elementWildcard", name=":mixed")
+	org.eclipse.emf.ecore.EFeatureMapEntry[] mixed
+	@ExtendedMetaData(kind="attribute", name="xmlns:prefix")
+	contains transient org.eclipse.emf.ecore.EStringToStringMapEntry[] xMLNSPrefixMap
+	@ExtendedMetaData(kind="attribute", name="xsi:schemaLocation")
+	contains transient org.eclipse.emf.ecore.EStringToStringMapEntry[] xSISchemaLocation
+	@GenModel(documentation="Root-element of the CAEX schema. ")
+	@ExtendedMetaData(kind="element", name="CAEXFile", namespace="##targetNamespace")
+	contains transient volatile derived CAEXFile[0..?] cAEXFile
+}
+
+@ExtendedMetaData(name="ExternalInterface_._type", kind="elementOnly")
+class ExternalInterface extends InterfaceClass {
+}
+
+@ExtendedMetaData(name="ExternalReference_._type", kind="elementOnly")
+class ExternalReference extends CAEXBasicObject {
+	@GenModel(documentation="Describes the alias name of an external CAEX file to enable referencing elements of the external CAEX file.")
+	@ExtendedMetaData(kind="attribute", name="Alias")
+	org.eclipse.emf.ecore.xml.^type.String[1] alias
+	@GenModel(documentation="Describes the path of the external CAEX file. Absolute and relative paths are allowed.")
+	@ExtendedMetaData(kind="attribute", name="Path")
+	org.eclipse.emf.ecore.xml.^type.String[1] path
+}
+
+@ExtendedMetaData(name="InstanceHierarchy_._type", kind="elementOnly")
+class InstanceHierarchy extends CAEXObject {
+	@GenModel(documentation="Shall be used in order to define nested objects inside of a SystemUnitClass or another InternalElement. Allows description of the internal structure of a CAEX object.")
+	@ExtendedMetaData(kind="element", name="InternalElement", namespace="##targetNamespace")
+	contains InternalElement[] internalElement
+}
+
+@ExtendedMetaData(name="InterfaceClassLib_._type", kind="elementOnly")
+class InterfaceClassLib extends CAEXObject {
+	@GenModel(documentation="Class definition for interfaces.")
+	@ExtendedMetaData(kind="element", name="InterfaceClass", namespace="##targetNamespace")
+	contains InterfaceClass[] interfaceClass
+}
+
+@GenModel(documentation="Shall be used for InterfaceClass definition, provides base structures for an interface class definition.")
+@ExtendedMetaData(name="InterfaceClassType", kind="elementOnly")
+class InterfaceClass extends CAEXObject {
+	@GenModel(documentation="Characterizes properties of the InterfaceClass.")
+	@ExtendedMetaData(kind="element", name="Attribute", namespace="##targetNamespace")
+	contains Attribute[] attribute
+	@GenModel(documentation="Stores the reference of a class to its base class. References contain the full path to the refered class object.")
+	@ExtendedMetaData(kind="attribute", name="RefBaseClassPath")
+	org.eclipse.emf.ecore.xml.^type.String refBaseClassPath
+	refers InterfaceClass baseClass
+	contains InterfaceClass[] interfaceClass
+	@ExtendedMetaData(kind="element", name="ExternalInterface", namespace="##targetNamespace")
+	contains InterfaceClass[] externalInterface
+}
+
+@GenModel(documentation="Defines base structures for a hierarchical InterfaceClass tree. The hierarchical structure of an interface library has organizational character only.  ")
+@ExtendedMetaData(name="InterfaceFamilyType", kind="elementOnly")
+class InterfaceFamily extends InterfaceClass {
+}
+
+@ExtendedMetaData(name="InterfaceIDMapping_._type", kind="elementOnly")
+class InterfaceIDMapping extends CAEXBasicObject {
+	@ExtendedMetaData(kind="attribute", name="RoleInterfaceID")
+	org.eclipse.emf.ecore.xml.^type.String[1] roleInterfaceID
+	@ExtendedMetaData(kind="attribute", name="SystemUnitInterfaceID")
+	org.eclipse.emf.ecore.xml.^type.String[1] systemUnitInterfaceID
+	refers ExternalInterface[1] roleInterface
+	refers ExternalInterface[1] systemUnitInterface
+}
+
+@GenModel(documentation="Defines base structures for a hierarchical object instance. The instance maybe part of the InstanceHierarchy or a SystemUnitClass.")
+@ExtendedMetaData(name="InternalElementType", kind="elementOnly")
+class InternalElement extends SystemUnitClass {
+	@GenModel(documentation="Describes role requirements of an InternalElement. It allows the definition of a reference to a RoleClass and the specification of role requirements like required attributes and required interfaces. ")
+	@ExtendedMetaData(kind="element", name="RoleRequirements", namespace="##targetNamespace")
+	contains RoleRequirements[] roleRequirements
+	@GenModel(documentation="Stores the reference of an InternalElement to a class or instance definition. References contain the full path information. ")
+	@ExtendedMetaData(kind="attribute", name="RefBaseSystemUnitPath")
+	org.eclipse.emf.ecore.xml.^type.String refBaseSystemUnitPath
+	refers SystemUnitClass baseSystemUnit
+}
+
+@ExtendedMetaData(name="InternalLink_._type", kind="elementOnly")
+class InternalLink extends CAEXObject {
+	@ExtendedMetaData(kind="attribute", name="RefPartnerSideA")
+	org.eclipse.emf.ecore.xml.^type.String[1] refPartnerSideA
+	@ExtendedMetaData(kind="attribute", name="RefPartnerSideB")
+	org.eclipse.emf.ecore.xml.^type.String[1] refPartnerSideB
+	refers InterfaceClass[1] partnerSideA
+	refers InterfaceClass[1] partnerSideB
+}
+
+@GenModel(documentation="Base element for AttributeNameMapping and InterfaceIDMapping.")
+@ExtendedMetaData(name="MappingType", kind="elementOnly")
+class Mapping extends CAEXBasicObject {
+	@GenModel(documentation="Allows the definition of the mapping between attributes of a related role class or its interfaces and attributes of the hosting system unit")
+	@ExtendedMetaData(kind="element", name="AttributeNameMapping", namespace="##targetNamespace")
+	contains AttributeNameMapping[] attributeNameMapping
+	@GenModel(documentation="Allows the definition of the mapping between interfaces of a related role class and interfaces of the hosting system unit.")
+	@ExtendedMetaData(kind="element", name="InterfaceIDMapping", namespace="##targetNamespace")
+	contains InterfaceIDMapping[] interfaceIDMapping
+}
+
+class NominalScaled {
+	org.eclipse.emf.ecore.xml.^type.String[] requiredValue
+}
+
+class OrdinalScaled {
+	org.eclipse.emf.ecore.xml.^type.String requiredMaxValue
+	org.eclipse.emf.ecore.xml.^type.String requiredValue
+	org.eclipse.emf.ecore.xml.^type.String requiredMinValue
+}
+
+@ExtendedMetaData(name="RefSemantic_._type", kind="elementOnly")
+class RefSemantic extends CAEXBasicObject {
+	@ExtendedMetaData(kind="attribute", name="CorrespondingAttributePath")
+	org.eclipse.emf.ecore.xml.^type.String[1] correspondingAttributePath
+}
+
+@ExtendedMetaData(name="RoleClassLib_._type", kind="elementOnly")
+class RoleClassLib extends CAEXObject {
+	@GenModel(documentation="Definition of a class of a role type.")
+	@ExtendedMetaData(kind="element", name="RoleClass", namespace="##targetNamespace")
+	contains RoleClass[] roleClass
+}
+
+@GenModel(documentation="Shall be used for RoleClass definition, provides base structures for a role class definition.")
+@ExtendedMetaData(name="RoleClassType", kind="elementOnly")
+class RoleClass extends CAEXObject {
+	@GenModel(documentation="Characterizes properties of the RoleClass.")
+	@ExtendedMetaData(kind="element", name="Attribute", namespace="##targetNamespace")
+	contains Attribute[] attribute
+	@GenModel(documentation="Description of an external interface.")
+	@ExtendedMetaData(kind="element", name="ExternalInterface", namespace="##targetNamespace")
+	contains ExternalInterface[] externalInterface
+	@GenModel(documentation="Stores the reference of a class to its base class. References contain the full path to the refered class object.")
+	@ExtendedMetaData(kind="attribute", name="RefBaseClassPath")
+	org.eclipse.emf.ecore.xml.^type.String refBaseClassPath
+	refers RoleClass baseClass
+	contains RoleClass[] roleClass
+}
+
+@GenModel(documentation="Defines base structures for a hierarchical RoleClass tree. The hierarchical structure of a role library has organizational character only. ")
+@ExtendedMetaData(name="RoleFamilyType", kind="elementOnly")
+class RoleFamily extends RoleClass {
+}
+
+@ExtendedMetaData(name="RoleRequirements_._type", kind="elementOnly")
+class RoleRequirements extends CAEXBasicObject {
+	@GenModel(documentation="Characterizes properties of the RoleRequirements.")
+	@ExtendedMetaData(kind="element", name="Attribute", namespace="##targetNamespace")
+	contains Attribute[] attribute
+	@ExtendedMetaData(kind="element", name="ExternalInterface", namespace="##targetNamespace")
+	contains InterfaceClass[] externalInterface
+	@GenModel(documentation="Host element for AttributeNameMapping and InterfaceIDMapping.")
+	@ExtendedMetaData(kind="element", name="MappingObject", namespace="##targetNamespace")
+	contains Mapping mappingObject
+	refers RoleClass[1] roleClass
+	@ExtendedMetaData(kind="attribute", name="RefBaseRoleClassPath")
+	org.eclipse.emf.ecore.xml.^type.String[1] refBaseRoleClassPath
+}
+
+@GenModel(documentation="Defines a structure to model information about the data source of the present CAEX document.")
+@ExtendedMetaData(name="SourceDocumentInformationType", kind="empty")
+class SourceDocumentInformation {
+	@GenModel(documentation="Date and time of the creation of the CAEX document.")
+	@ExtendedMetaData(kind="attribute", name="LastWritingDateTime")
+	org.eclipse.emf.ecore.xml.^type.DateTime[1] lastWritingDateTime
+	@GenModel(documentation="Unique identifier of the origin of the CAEX document, e.g. a unique identifier of a source engineering tool or an exporter software. The ID shall not change even if the origin gets renamed. ")
+	@ExtendedMetaData(kind="attribute", name="OriginID")
+	org.eclipse.emf.ecore.xml.^type.String[1] originID
+	@GenModel(documentation="Name of the origin of the CAEX document, e.g. the source engineering tool or an exporter software")
+	@ExtendedMetaData(kind="attribute", name="OriginName")
+	org.eclipse.emf.ecore.xml.^type.String[1] originName
+	@GenModel(documentation="Optional: a unique identifier of the corresponding source project")
+	@ExtendedMetaData(kind="attribute", name="OriginProjectID")
+	org.eclipse.emf.ecore.xml.^type.String originProjectID
+	@GenModel(documentation="Optional: the title of the corresponding source project")
+	@ExtendedMetaData(kind="attribute", name="OriginProjectTitle")
+	org.eclipse.emf.ecore.xml.^type.String originProjectTitle
+	@GenModel(documentation="Optional: release information of the origin of the CAEX document, e.g. the version of the source engineering tool or the exporter software.")
+	@ExtendedMetaData(kind="attribute", name="OriginRelease")
+	org.eclipse.emf.ecore.xml.^type.String originRelease
+	@GenModel(documentation="Optional: the vendor of the data source of the CAEX document")
+	@ExtendedMetaData(kind="attribute", name="OriginVendor")
+	org.eclipse.emf.ecore.xml.^type.String originVendor
+	@GenModel(documentation="Optional: the vendors URL of the data source of the CAEX document")
+	@ExtendedMetaData(kind="attribute", name="OriginVendorURL")
+	org.eclipse.emf.ecore.xml.^type.String originVendorURL
+	@GenModel(documentation="Version of the origin of the CAEX document, e.g. the version of the source engineering tool or the exporter software.")
+	@ExtendedMetaData(kind="attribute", name="OriginVersion")
+	org.eclipse.emf.ecore.xml.^type.String[1] originVersion
+}
+
+@ExtendedMetaData(name="SupportedRoleClass_._type", kind="elementOnly")
+class SupportedRoleClass extends CAEXBasicObject {
+	@ExtendedMetaData(kind="element", name="MappingObject", namespace="##targetNamespace")
+	contains Mapping mappingObject
+	@ExtendedMetaData(kind="attribute", name="RefRoleClassPath")
+	org.eclipse.emf.ecore.xml.^type.String[1] refRoleClassPath
+	refers RoleClass[1] roleClass
+}
+
+@ExtendedMetaData(name="SystemUnitClassLib_._type", kind="elementOnly")
+class SystemUnitClassLib extends CAEXObject {
+	@GenModel(documentation="Shall be used for SystemUnitClass definition, provides definition of a class of a SystemUnitClass type.")
+	@ExtendedMetaData(kind="element", name="SystemUnitClass", namespace="##targetNamespace")
+	contains SystemUnitClass[] systemUnitClass
+}
+
+@GenModel(documentation="Defines base structures for a SystemUnit class definition.")
+@ExtendedMetaData(name="SystemUnitClassType", kind="elementOnly")
+class SystemUnitClass extends CAEXObject {
+	@GenModel(documentation="Characterizes properties of the SystemUnitClass.")
+	@ExtendedMetaData(kind="element", name="Attribute", namespace="##targetNamespace")
+	contains Attribute[] attribute
+	@GenModel(documentation="Description of an external interface.")
+	@ExtendedMetaData(kind="element", name="ExternalInterface", namespace="##targetNamespace")
+	contains InterfaceClass[] externalInterface
+	@GenModel(documentation="Shall be used in order to define nested objects inside of a SystemUnitClass or another InternalElement. Allows description of the internal structure of a CAEX object.")
+	@ExtendedMetaData(kind="element", name="InternalElement", namespace="##targetNamespace")
+	contains InternalElement[] internalElement
+	@GenModel(documentation="Allows the association to a RoleClass which this SystemUnitClass can play. A SystemUnitClass may reference multiple roles.")
+	@ExtendedMetaData(kind="element", name="SupportedRoleClass", namespace="##targetNamespace")
+	contains SupportedRoleClass[] supportedRoleClass
+	@GenModel(documentation="Shall be used in order to define the relationships between internal interfaces of InternalElements.")
+	@ExtendedMetaData(kind="element", name="InternalLink", namespace="##targetNamespace")
+	contains InternalLink[] internalLink
+	refers SystemUnitClass baseClass
+	contains SystemUnitClass[] systemUnitClass
+	org.eclipse.emf.ecore.xml.^type.String refBaseClassPath
+}
+
+@GenModel(documentation="Defines base structures for a hierarchical SystemUnitClass tree. The hierarchical structure of a SystemUnit library has organizational character only.  ")
+@ExtendedMetaData(name="SystemUnitFamilyType", kind="elementOnly")
+class SystemUnitFamily extends SystemUnitClass {
+}
+
+@ExtendedMetaData(name="UnknownType_._type", kind="elementOnly")
+class UnknownType {
+	@GenModel(documentation="Defines informative requirements as a constraint for an attribute value.")
+	@ExtendedMetaData(kind="element", name="Requirements", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String requirements
+}
+
+@ExtendedMetaData(name="Copyright", kind="simple")
+class Copyright {
+	@ExtendedMetaData(name=":0", kind="simple")
+	org.eclipse.emf.ecore.xml.^type.String value
+	@ExtendedMetaData(kind="attribute", name="ChangeMode", namespace="##targetNamespace")
+	ChangeMode changeMode
+}
+
+@ExtendedMetaData(name="Description", kind="simple")
+class Description {
+	@ExtendedMetaData(name=":0", kind="simple")
+	org.eclipse.emf.ecore.xml.^type.String value
+	@ExtendedMetaData(kind="attribute", name="ChangeMode", namespace="##targetNamespace")
+	ChangeMode changeMode
+}
+
+@ExtendedMetaData(name="Revision", kind="elementOnly")
+class Revision extends CAEXBasicObject {
+	@ExtendedMetaData(kind="element", name="RevisionDate", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.DateTime[1] revisionDate
+	@ExtendedMetaData(kind="element", name="OldVersion", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String oldVersion
+	@ExtendedMetaData(kind="element", name="NewVersion", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String newVersion
+	@ExtendedMetaData(kind="element", name="AuthorName", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String[1] authorName
+	@ExtendedMetaData(kind="element", name="Comment", namespace="##targetNamespace")
+	org.eclipse.emf.ecore.xml.^type.String comment
+}
+
+@ExtendedMetaData(name="Version", kind="simple")
+class Version {
+	@ExtendedMetaData(name=":0", kind="simple")
+	org.eclipse.emf.ecore.xml.^type.String value
+	@ExtendedMetaData(kind="attribute", name="ChangeMode", namespace="##targetNamespace")
+	ChangeMode changeMode
+}
+
+class AdditionalInformation extends anytype.GenericElement {
+}

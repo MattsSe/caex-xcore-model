@@ -1,0 +1,26 @@
+@Ecore(nsPrefix="Anytype", nsURI="http://caex/anytype")
+@GenModel(bundleManifest="false", forceOverwrite="true", modelDirectory="caex-xcore-model/build/xcore/main",
+	updateClasspath="false", complianceLevel="8.0", prefix="Anytype", modelName="Anytype")
+package anytype
+
+import org.eclipse.emf.ecore.EFeatureMapEntry
+
+abstract class Element {
+	@ExtendedMetaData(kind="attribute")
+	String name
+	String value
+}
+
+@ExtendedMetaData(kind="empty")
+class GenericElement extends Element {
+	contains GenericElement[] nestedElements
+	contains GenericAttribute[] attributes
+	@ExtendedMetaData(kind="elementWildcard", name=":0", wildcards="##any", processing="lax")
+	transient org.eclipse.emf.ecore.EFeatureMapEntry[] elementFeatureMap
+	@ExtendedMetaData(kind="attributeWildcard", name=":1", wildcards="##any", processing="lax")
+	org.eclipse.emf.ecore.EFeatureMapEntry[] attributeFeatureMap
+}
+
+@ExtendedMetaData(kind="empty")
+class GenericAttribute extends Element {
+}

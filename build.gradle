@@ -1,0 +1,34 @@
+buildscript {
+	ext.xtext_version = '2.16.0'
+	ext.junit_version = '4.12'
+	
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'org.xtext:xtext-gradle-plugin:1.0.21'
+	}
+}
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'org.xtext.xtend'
+apply from: "${rootDir}/gradle/source-layout.gradle"
+apply from: "${rootDir}/gradle/xcore-model-config.gradle"
+apply plugin: 'eclipse'
+
+
+group = 'org.caex'
+version = '1.0.0-SNAPSHOT'
+
+configurations.all {
+	exclude group: 'asm'
+}
+
+wrapper {
+	version = '4.10'
+}
